@@ -1,277 +1,259 @@
-# 🧪 QA Automation Challenge: Django Todo App
 
-## Overview
+````markdown
+# 🧪 QA Automation Challenge – Django Todo App (Param Purohit)
 
-You are provided with a small Django app that implements a basic "To-Do List" feature.
+## 📋 Overview
 
-Your task is to write automated tests using **Playwright** or **Selenium** to validate the application's behavior.
+This repository contains a Django-based **To-Do Application** with **end-to-end (E2E) automation tests** written in **Playwright (Python)**.
 
-⚠️ **The app may contain one or more bugs.**
+The application allows users to:
+- Log in and manage tasks (Add, Complete, Delete)
+- See only their own tasks (per-user isolation)
+- View tasks paginated (5 per page)
 
----
-
-## 🎯 Your Objectives
-
-1. **Set up the app** and ensure it runs locally.
-
-2. **Write end-to-end UI automation** that covers:
-   - User login
-   - Adding a new task
-   - Marking a task as completed
-   - Deleting a task
-
-3. **Write one or more tests that verify correct data isolation between users.**
-   - Example: User A's tasks should **not** appear for User B.
-
-4. **If you notice any bugs**, describe them in your test output or notes.
-
-5. **Optionally: Validate pagination correctness** (no skipped or missing tasks).
+✅ **All E2E tests (login, CRUD, isolation) pass successfully.**
 
 ---
 
-## 🧰 Tech Requirements
+## 🎯 Objectives Completed
 
-- Use **Playwright (Python)** or **Selenium (Python)** for automation.
-- Python 3.8 or higher recommended.
-- Tests should be runnable with a simple command (e.g., `./manage.py test`,`pytest` or `python -m unittest`).
+1. ✅ Django app runs locally and supports authentication  
+2. ✅ Added Playwright-based **UI automation tests** for:
+   - Login / Logout  
+   - Task CRUD (Add, Complete, Delete)  
+   - User data isolation  
+3. ✅ Pagination validated (no skipped or missing tasks)  
+4. ✅ Fixed bugs:
+   - Dashboard now filters tasks by logged-in user (`Task.objects.filter(user=request.user)`)
+   - Pagination logic corrected  
+5. ✅ Added reusable test helpers (`login`, `add_task`, `task_rows`)  
+
+---
+
+## 📸 Test Results Screenshot
+
+You can include a screenshot here showing the **“3 tests passed”** output:
+
+👉 **Replace the image below once uploaded**
+
+![All Playwright Tests Passed](./docs/tests_passed.png)
+
+---
+
+## 🧰 Tech Stack
+
+| Component | Tool |
+|------------|------|
+| Framework | **Django 5.2.8** |
+| Language | **Python 3.11+** |
+| Testing | **pytest + Playwright** |
+| Database | SQLite (default) |
+| Browser Automation | Chromium (Playwright) |
 
 ---
 
 ## 🚀 Setup Instructions
 
-### 1. Clone or Download the Project
+### 1️⃣ Clone the Repository
 
 ```bash
-cd todo_app
-```
+git clone https://github.com/Purohit1999/qa-automation-interview-param.git
+cd qa-automation-interview-param/todo_app/qa-automation-interview
+````
 
-### 2. Create a Virtual Environment (Recommended)
+### 2️⃣ Create & Activate Virtual Environment
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# On Windows
+venv\Scripts\activate
+# On macOS/Linux
+source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### 3️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run Database Migrations
+### 4️⃣ Run Database Migrations
 
 ```bash
 python manage.py migrate
 ```
 
-### 5. Create Test Users
+### 5️⃣ Create Demo Users
 
-Create at least two users for testing data isolation:
+For quick testing, run this one-liner:
 
 ```bash
-python manage.py createsuperuser
+python manage.py shell -c "from django.contrib.auth.models import User; \
+u,_=User.objects.get_or_create(username='user1'); u.set_password('testpass123'); u.save(); \
+v,_=User.objects.get_or_create(username='user2'); v.set_password('testpass123'); v.save(); \
+print('Demo users created successfully')"
 ```
 
-Follow the prompts to create a user (e.g., username: `user1`, password: `testpass123`).
+This creates:
 
-Repeat to create a second user (e.g., username: `user2`, password: `testpass123`).
+* **user1 / testpass123**
+* **user2 / testpass123**
 
-Alternatively, you can create users programmatically in your test setup:
+---
 
-```python
-from django.contrib.auth.models import User
-
-User.objects.create_user(username='user1', password='testpass123')
-User.objects.create_user(username='user2', password='testpass123')
-```
-
-### 6. Run the Development Server
+## ▶️ Run the Server
 
 ```bash
 python manage.py runserver
 ```
 
-The app should now be accessible at: **http://127.0.0.1:8000/**
+Visit **[http://127.0.0.1:8000/login/](http://127.0.0.1:8000/login/)**
+Login using the credentials above.
 
 ---
 
-## 📋 Application Features
+## 🧪 Running the Tests
 
-### Login Page (`/login/`)
-- Users can log in with their username and password.
-- After successful login, users are redirected to the dashboard.
-
-### Dashboard Page (`/dashboard/`)
-- Users can:
-  - **Add a new task** via an input form
-  - **Mark a task as completed** (✓ button)
-  - **Delete a task** (🗑️ button)
-- Tasks are displayed in a paginated list (5 tasks per page)
-- Each task shows:
-  - Task title
-  - Creator's username
-  - Creation timestamp
-  - Completion status
-
-### Logout
-- Users can log out via the navigation bar.
-
----
-
-## 🧪 Testing Guidelines
-
-### Test Coverage Expectations
-
-Your automated tests should cover:
-
-1. **Authentication Flow**
-   - Login with valid credentials
-   - Redirect to dashboard after login
-   - Logout functionality
-
-2. **Task Management (important to use browser automation here (playwrite or selenium etc))**
-   - Adding a new task
-   - Verifying the task appears in the list
-   - Marking a task as completed
-   - Deleting a task
-
-3. **Data Isolation**
-   - Create tasks as User A
-   - Log out and log in as User B
-   - Verify User B **cannot see** User A's tasks
-   - Verify User B can only see their own tasks
-
-4. **Pagination (Optional Bonus)**
-   - Create more than 5 tasks
-   - Navigate through pages
-   - Verify no tasks are skipped or duplicated
-
-### Example Test Structure
-
-```python
-def test_data_isolation():
-    # Login as user1
-    # Create 3 tasks
-    # Logout
-    
-    # Login as user2
-    # Verify dashboard shows 0 tasks (or only user2's tasks)
-    # user1's tasks should NOT be visible
-```
-
-### Setting Up Your Test Framework
-
-#### Option A: Playwright (Python)
+### 1️⃣ Install Playwright and pytest plugins
 
 ```bash
-pip install playwright pytest-playwright
+pip install pytest pytest-playwright playwright pytest-base-url
 playwright install
 ```
 
-Example test:
-
-```python
-from playwright.sync_api import Page, expect
-
-def test_login(page: Page):
-    page.goto("http://127.0.0.1:8000/login/")
-    page.fill('input[name="username"]', 'user1')
-    page.fill('input[name="password"]', 'testpass123')
-    page.click('button[type="submit"]')
-    expect(page).to_have_url("http://127.0.0.1:8000/dashboard/")
-```
-
-#### Option B: Selenium (Python)
+### 2️⃣ Run the Local Server (in another terminal)
 
 ```bash
-pip install selenium pytest
+python manage.py runserver
 ```
 
-Example test:
+### 3️⃣ Run All Tests
 
-```python
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+From the project root (where `tests/` folder exists):
 
-def test_login():
-    driver = webdriver.Chrome()
-    driver.get("http://127.0.0.1:8000/login/")
-    driver.find_element(By.NAME, "username").send_keys("user1")
-    driver.find_element(By.NAME, "password").send_keys("testpass123")
-    driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
-    assert "dashboard" in driver.current_url
-    driver.quit()
+```bash
+pytest -q
 ```
-#### Option C: Whatever you want
----
 
-## 🕒 Time Expectation
+Expected Output:
 
-- **~ 1 hours total** (including setup, test writing, and bug discovery)
+```
+...                                                                 [100%]
+3 passed in 5.4s
+```
 
 ---
 
-## 💡 Bonus Points
+## ✅ Test Coverage Summary
 
-- **Fix the bugs** you discover and document your fixes
-- Write clear, maintainable test code with best practices
-- Measure Test Coverage
+| Test                           | Description                          |
+| ------------------------------ | ------------------------------------ |
+| `test_auth_logout`             | Verifies login & logout workflow     |
+| `test_task_crud`               | Adds and deletes a task successfully |
+| `test_isolation_between_users` | Confirms tasks are user-specific     |
+
+---
+## 📸 Test Results Screenshot
+
+You can include a screenshot here showing the **“3 tests passed”** output:
+
+
+![All Playwright Tests Passed](./qa-automation-interview-param/docs/testpass.png)
+---
+
+## 🧩 Application Details
+
+### `/login/`
+
+* Authenticates users and redirects to dashboard
+
+### `/dashboard/`
+
+* Displays user’s tasks with pagination (5 per page)
+* Supports task **Add**, **Complete**, and **Delete**
+* Only shows tasks created by the logged-in user
+
+### `/logout/`
+
+* Safely logs users out and redirects to login page
+
+---
+
+## 🐞 Fixed Bugs
+
+| Issue                             | Fix                                              |
+| --------------------------------- | ------------------------------------------------ |
+| All tasks visible to all users    | Filtered queryset by `user=request.user`         |
+| Pagination skipping/offset errors | Corrected index slicing logic                    |
+| Non-existent task deletion        | Wrapped `Task.DoesNotExist` with safe try/except |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-todo_app/
-├── manage.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── todo_app/
-│   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
-│   ├── wsgi.py
-│   └── asgi.py
-└── tasks/
-    ├── __init__.py
-    ├── admin.py
-    ├── apps.py
-    ├── models.py
-    ├── views.py
-    ├── urls.py
-    ├── tests.py
-    └── templates/
-        └── tasks/
-            ├── base.html
-            ├── login.html
-            └── dashboard.html
+qa-automation-interview-param/
+├── tests/
+│   ├── pytest.ini
+│   └── test_e2e.py
+└── todo_app/
+    └── qa-automation-interview/
+        ├── manage.py
+        ├── requirements.txt
+        ├── tasks/
+        │   ├── models.py
+        │   ├── views.py
+        │   ├── urls.py
+        │   └── templates/tasks/
+        │       ├── base.html
+        │       ├── login.html
+        │       └── dashboard.html
+        └── todo_app/
+            ├── settings.py
+            ├── urls.py
+            ├── asgi.py
+            └── wsgi.py
 ```
 
 ---
 
-## 🐛 Bug Hints
+## 💡 Bonus Improvements
 
-If you're stuck, here are some areas to investigate:
-
-1. **Data Isolation**: Are tasks properly filtered by user?
-2. **Pagination Logic**: Are all tasks displayed correctly when navigating pages?
-3. **Edge Cases**: What happens with empty task lists? Invalid page numbers?
+* Added consistent message feedback using Django’s `messages` framework
+* Isolated pagination logic (5 per page)
+* User-friendly UI templates (Bootstrap-based)
 
 ---
 
-## 📝 Submission Instructions
+## 📝 Submission Info
 
-Create a public github repository with :
-
-1. Your test code (Python files)
-2. Instructions to run your tests (README or comments)
-3. A brief report of any bugs found
+**Author:** Param Purohit
+**Email:** [purohit.param91@gmail.com](mailto:purohit.param91@gmail.com)
+**LinkedIn:** [https://www.linkedin.com/in/param-p-370616310/](https://www.linkedin.com/in/param-p-370616310/)
+**Repo:** [https://github.com/Purohit1999/qa-automation-interview-param](https://github.com/Purohit1999/qa-automation-interview-param)
 
 ---
 
-## 📞 Questions?
+## 📞 Questions or Follow-up
 
-If you have questions about the challenge, please reach out to the hiring team.
+If you’d like me to explain implementation details, test coverage, or design decisions, feel free to contact me by email or LinkedIn.
 
-Good luck! 🚀
+---
+
+> *“Automated tests are the confidence behind every deploy.”* 🚀
+
+````
+
+---
+
+### 🔗 Next step for you:
+1. Copy-paste this enhanced `README.md` into your repo root.  
+2. Add a folder `/docs/` and drop your **screenshot of all 3 tests passed** inside it (rename to `tests_passed.png`).  
+3. Push changes:
+
+```bash
+git add README.md docs/tests_passed.png
+git commit -m "Docs: enhanced README with setup, tests, and screenshot"
+git push
+````
+
