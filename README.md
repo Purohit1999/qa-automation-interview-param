@@ -154,11 +154,11 @@ Expected Output:
 
 ---
 ## 📸 Test Results Screenshot
-
-You can include a screenshot here showing the **“3 tests passed”** output:
+The **“3 tests passed”** output:
 
 
 ![All Playwright Tests Passed](./qa-automation-interview-param/docs/testpass.png)
+
 ---
 
 ## 🧩 Application Details
