@@ -156,7 +156,7 @@ Expected Output:
 ## 📸 Test Results Screenshot
 The **“3 tests passed”** output:
 
-![All Playwright Tests Passed](qa-automation-interview-param\docs\testpass.png)
+![All Playwright Tests Passed](https://github.com/Purohit1999/qa-automation-interview-param/blob/main/docs/testpass.png)
 
 ---
 
