@@ -244,16 +244,4 @@ If you’d like me to explain implementation details, test coverage, or design d
 
 ````
 
----
-
-### 🔗 Next step for you:
-1. Copy-paste this enhanced `README.md` into your repo root.  
-2. Add a folder `/docs/` and drop your **screenshot of all 3 tests passed** inside it (rename to `tests_passed.png`).  
-3. Push changes:
-
-```bash
-git add README.md docs/tests_passed.png
-git commit -m "Docs: enhanced README with setup, tests, and screenshot"
-git push
-````
 
